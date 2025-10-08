@@ -1,34 +1,23 @@
-## **1. The chosen strategy**
+# Branching Strategy: GitHub Flow
 
-The chosen branching strategy for this project is **Git Flow**.
-This model defines a clear, structured process for managing versions and stabilizing releases through controlled branch creation.
-Although the classic Git Flow approach includes both `main` and `develop` as permanent branches, in this specific case the flow has been **simplified** — the project does not require continuous integration or frequent code releases, so development is managed directly from the `main` branch.
+## 1. The chosen strategy
 
----
+The chosen branching strategy for this project is **GitHub Flow**.
+This model provides a lightweight, simple, and efficient workflow ideal for projects that require continuous integration and frequent updates.
+It is based on a single long-lived branch (`main`), with short-lived feature branches that are created, reviewed, and merged via Pull Requests.
 
-## **2. Why it fits this project**
+## 2. Why it fits this project
 
-This project focuses primarily on maintaining the connection between the **API layer**, the **user interface**, and a **database** that may change over time.
-Because the main updates occur through the database layer rather than continuous software releases, **Git Flow provides a balance between stability and flexibility**.
+This project focuses on practicing the DevOps lifecycle — specifically version control, branching, and collaboration.
+GitHub Flow fits perfectly because it encourages small, iterative changes with peer review before merging into `main`.
 
-Using a stable main branch ensures:
-- Reliable deployments with minimal conflicts.
-- Controlled evolution of both submodules (`api` and `ui`).
-- Independence between interface and backend updates.
+Using a single stable `main` branch ensures:
+- Easier collaboration and fewer merge conflicts.
+- Continuous deployment readiness.
+- Simpler history and rollback if needed.
 
----
+## 3. Trade-offs considered
 
-## **3. Trade-offs considered**
-
-- **Main branch always exists:**
-  Git Flow keeps `main` as the stable production branch.
-
-- **Compared to GitHub Flow:**
-  Although GitHub Flow also works with a single `main` branch, it is oriented toward **continuous delivery** and **frequent pull requests**.
-  This project does **not require continuous releases**, so that approach would add unnecessary steps.
-
-- **Temporary branches allowed:**
-  Git Flow allows the creation of short-lived branches for testing or small updates without affecting stability.
-
-- **Version control and structure:**
-  This model enables better control of versions and the ability to integrate future features or database-related changes in an organized way.
+- **Compared to Git Flow:** GitHub Flow is simpler and better suited for continuous delivery. Git Flow adds complexity with `develop`, `release`, and `hotfix` branches — unnecessary for this lightweight project.
+- **Main branch protection:** All changes must go through Pull Requests, ensuring code review.
+- **Short-lived branches:** Each branch focuses on a single, small feature or fix.

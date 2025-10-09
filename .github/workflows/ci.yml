@@ -20,19 +20,20 @@ jobs:
           node-version: 18
 
       - name: Install dependencies
-	working-directory: movie-analyst-api
+        working-directory: movie-analyst-api
         run: npm ci
 
       - name: Run tests
-	working-directory: movie-analyst-api
-        run: npm test || echo "No tests configured"
+        working-directory: movie-analyst-api
+        run: npm test || echo "⚠️ No tests configured"
 
       - name: Build project
-	working-directory: movie-analyst-api
-        run: npm run build || echo "No tests configured"
+        working-directory: movie-analyst-api
+        run: npm run build || echo "⚠️ No build script configured"
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
           name: api-build-artifacts
           path: movie-analyst-api/dist/
+

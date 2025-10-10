@@ -1,0 +1,15 @@
+---
+- name: Run latest version
+  hosts: _API
+  remote_user: ubuntu
+  become: yes
+  
+  tasks:
+  
+  - name: kill all processes
+    shell: "killall node -w"
+    ignore_errors: true
+      
+  - name: run server
+    shell:
+      cmd: nohup bash -c "DB_HOST='{{ lookup('env', 'DB_HOST') }}' DB_USER='{{ lookup('env', 'DB_USER') }}' DB_PASS='{{ lookup('env', 'DB_PASS') }}' DB_NAME='{{ lookup('env', 'DB_NAME') }}' node /home/ubuntu/app/server.js &"

@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: staging
-      url: https://example.com
+      url: https://examplefortwotimes.com
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4

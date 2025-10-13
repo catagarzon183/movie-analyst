@@ -19,21 +19,38 @@ jobs:
         with:
           node-version: 18
 
-      - name: Install dependencies
+      # --- Backend (API) ---
+      - name: Install dependencies (API)
         working-directory: movie-analyst-api
         run: npm ci
 
-      - name: Run tests
+      - name: Run tests (API)
         working-directory: movie-analyst-api
         run: npm test || echo "⚠️ No tests configured"
 
-      - name: Build project
+      - name: Build project (API)
         working-directory: movie-analyst-api
         run: npm run build || echo "⚠️ No build script configured"
 
+      # --- Frontend (UI) ---
+      - name: Install dependencies (UI)
+        working-directory: movie-analyst-ui
+        run: npm ci
+
+      - name: Run tests (UI)
+        working-directory: movie-analyst-ui
+        run: npm test || echo "⚠️ No tests configured"
+
+      - name: Build project (UI)
+        working-directory: movie-analyst-ui
+        run: npm run build || echo "⚠️ No build script configured"
+
+      # --- Upload artifacts ---
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: api-build-artifacts
-          path: movie-analyst-api/dist/
+          name: build-artifacts
+          path: |
+            movie-analyst-api/
+            movie-analyst-ui/
 

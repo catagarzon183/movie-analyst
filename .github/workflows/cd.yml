@@ -1,0 +1,53 @@
+name: CD Pipeline
+
+on:
+  workflow_dispatch:       # Permite ejecutar el pipeline manualmente
+  release:
+    types: [published]     # También se dispara cuando creas un release/tag
+
+jobs:
+  deploy-to-staging:
+    runs-on: ubuntu-latest
+    environment:
+      name: staging
+      url: https://examplefortwotimes.com
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-artifacts
+          path: ./build
+
+      - name: Deploy to staging environment
+        run: |
+          echo "🚀 Deploying to staging environment..."
+          sleep 10
+          echo "✅ Deployed to staging successfully."
+
+  approve-production:
+    runs-on: ubuntu-latest
+    needs: deploy-to-staging
+    environment:
+      name: production
+      url: https://example.com   # opcional: URL de tu app o mock
+    steps:
+      - name: Manual approval gate
+        run: echo "✅ Production deployment approved!"
+
+  deploy-to-production:
+    runs-on: ubuntu-latest
+    needs: approve-production
+    environment:
+      name: production
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Deploy to production
+        run: |
+          echo "🚀 Deploying to PRODUCTION..."
+          sleep 10
+          echo "🎉 Production deployment completed!"

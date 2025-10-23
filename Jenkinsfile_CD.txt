@@ -1,0 +1,33 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Deploy to Staging') {
+            steps {
+                echo "🚀 Deploying to staging environment..."
+                sh '''
+                    echo "Simulating deployment..."
+                    sleep 10
+                    echo "✅ Deployed to staging successfully."
+                '''
+            }
+        }
+
+        stage('Approve Production') {
+            steps {
+                input message: "🚦 Approve deployment to PRODUCTION?"
+            }
+        }
+
+        stage('Deploy to Production') {
+            steps {
+                echo "🚀 Deploying to PRODUCTION..."
+                sh '''
+                    echo "Simulating production deployment..."
+                    sleep 10
+                    echo "🎉 Production deployment completed!"
+                '''
+            }
+        }
+    }
+}

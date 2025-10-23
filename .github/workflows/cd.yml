@@ -32,7 +32,7 @@ jobs:
     needs: deploy-to-staging
     environment:
       name: production
-      url: https://example.com   # opcional: URL de tu app o mock
+      url: https://examplefortwotimes.com  # opcional: URL de tu app o mock
     steps:
       - name: Manual approval gate
         run: echo "✅ Production deployment approved!"

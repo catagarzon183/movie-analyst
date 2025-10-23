@@ -1,0 +1,72 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install dependencies (API)
+        working-directory: movie-analyst-api
+        run: npm ci
+
+      - name: Build project (API)
+        working-directory: movie-analyst-api
+        run: npm run build || echo "⚠️ No build script configured"
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-artifacts
+          path: movie-analyst-api/
+
+  deploy-to-staging:
+    runs-on: ubuntu-latest
+    needs: build-and-test
+    environment:
+      name: staging
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-artifacts
+          path: ./build
+
+      - name: Deploy to staging environment
+        run: |
+          echo "🚀 Deploying to staging..."
+          sleep 5
+          echo "✅ Staging deployment completed."
+
+  approve-production:
+    runs-on: ubuntu-latest
+    needs: deploy-to-staging
+    environment:
+      name: production
+      url: https://example.com
+    steps:
+      - name: Approval step
+        run: echo "🕓 Waiting for manual approval..."
+
+  deploy-to-production:
+    runs-on: ubuntu-latest
+    needs: approve-production
+    environment:
+      name: production
+    steps:
+      - name: Deploy to production
+        run: |
+          echo "🚀 Deploying to production..."
+          sleep 5
+          echo "🎉 Deployment completed!"

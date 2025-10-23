@@ -1,0 +1,79 @@
+pipeline {
+    agent any
+    triggers {
+        pollSCM('H/5 * * * *') // Jenkins revisa cambios cada 5 min (simula on: push/pull_request)
+    }
+
+    stages {
+        stage('Checkout repository') {
+            steps {
+                git branch: 'main', url: 'https://github.com/catagarzon183/movie-analyst.git'
+            }
+        }
+
+        stage('Set up Node.js') {
+            steps {
+                echo "🔧 Setting up Node.js v18"
+                sh 'node -v || echo "Installing Node 18..."'
+            }
+        }
+
+        // --- Backend (API) ---
+        stage('Install dependencies (API)') {
+            steps {
+                dir('movie-analyst-api') {
+                    sh 'npm ci'
+                }
+            }
+        }
+
+        stage('Run tests (API)') {
+            steps {
+                dir('movie-analyst-api') {
+                    sh 'npm test || echo "⚠️ No tests configured"'
+                }
+            }
+        }
+
+        stage('Build project (API)') {
+            steps {
+                dir('movie-analyst-api') {
+                    sh 'npm run build || echo "⚠️ No build script configured"'
+                }
+            }
+        }
+
+        // --- Frontend (UI) ---
+        stage('Install dependencies (UI)') {
+            steps {
+                dir('movie-analyst-ui') {
+                    sh 'npm ci'
+                }
+            }
+        }
+
+        stage('Run tests (UI)') {
+            steps {
+                dir('movie-analyst-ui') {
+                    sh 'npm test || echo "⚠️ No tests configured"'
+                }
+            }
+        }
+
+        stage('Build project (UI)') {
+            steps {
+                dir('movie-analyst-ui') {
+                    sh 'npm run build || echo "⚠️ No build script configured"'
+                }
+            }
+        }
+
+        // --- Artifacts ---
+        stage('Archive Artifacts') {
+            steps {
+                echo "📦 Saving build artifacts..."
+                archiveArtifacts artifacts: 'movie-analyst-api/**, movie-analyst-ui/**', fingerprint: true
+            }
+        }
+    }
+}

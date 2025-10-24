@@ -14,7 +14,7 @@ pipeline {
         stage('Set up Node.js') {
             steps {
                 echo "🔧 Setting up Node.js v18"
-                sh 'node -v || echo "Installing Node 18..."'
+                bat 'node -v || echo "Installing Node 18..."'
             }
         }
 
@@ -22,7 +22,7 @@ pipeline {
         stage('Install dependencies (API)') {
             steps {
                 dir('movie-analyst-api') {
-                    sh 'npm ci'
+                    bat 'npm ci'
                 }
             }
         }
@@ -30,7 +30,7 @@ pipeline {
         stage('Run tests (API)') {
             steps {
                 dir('movie-analyst-api') {
-                    sh 'npm test || echo "⚠️ No tests configured"'
+                    bat 'npm test || echo "⚠️ No tests configured"'
                 }
             }
         }
@@ -38,7 +38,7 @@ pipeline {
         stage('Build project (API)') {
             steps {
                 dir('movie-analyst-api') {
-                    sh 'npm run build || echo "⚠️ No build script configured"'
+                    bat 'npm run build || echo "⚠️ No build script configured"'
                 }
             }
         }
@@ -47,7 +47,7 @@ pipeline {
         stage('Install dependencies (UI)') {
             steps {
                 dir('movie-analyst-ui') {
-                    sh 'npm ci'
+                    bat 'npm ci'
                 }
             }
         }
@@ -55,7 +55,7 @@ pipeline {
         stage('Run tests (UI)') {
             steps {
                 dir('movie-analyst-ui') {
-                    sh 'npm test || echo "⚠️ No tests configured"'
+                    bat 'npm test || echo "⚠️ No tests configured"'
                 }
             }
         }
@@ -63,7 +63,7 @@ pipeline {
         stage('Build project (UI)') {
             steps {
                 dir('movie-analyst-ui') {
-                    sh 'npm run build || echo "⚠️ No build script configured"'
+                    bat 'npm run build || echo "⚠️ No build script configured"'
                 }
             }
         }

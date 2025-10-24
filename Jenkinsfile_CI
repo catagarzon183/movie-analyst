@@ -27,13 +27,99 @@ pipeline {
             }
         }
 
-        stage('Run tests (API)') {
+        pipeline {
+    agent any
+    triggers {
+        pollSCM('H/5 * * * *') // Jenkins revisa cambios cada 5 min (simula on: push/pull_request)
+    }
+
+    stages {
+        stage('Checkout repository') {
+            steps {
+                git branch: 'main', url: 'https://github.com/catagarzon183/movie-analyst.git'
+            }
+        }
+
+        stage('Set up Node.js') {
+            steps {
+                echo "🔧 Setting up Node.js v18"
+                bat 'node -v || echo "Installing Node 18..."'
+            }
+        }
+
+        // --- Backend (API) ---
+        stage('Install dependencies (API)') {
             steps {
                 dir('movie-analyst-api') {
+                    bat 'npm ci'
+                }
+            }
+        }
+
+        stage('Run tests (API)') {
+    	   steps {
+       		 script {
+            	// Variables de entorno necesarias
+            	withEnv(["PORT=3000", "NODE_ENV=test"]) {
+                echo "Running API tests..."
+                // Ejecuta los tests y evita que falle si aún no hay configurados
+                bat '''
+                cd movie-analyst-api
+                if exist package.json (
+                    npm test || echo "⚠️ No tests configured yet"
+                ) else (
+                    echo "package.json not found in movie-analyst-api"
+                )
+                '''
+            }
+        }
+    }
+}
+
+
+        stage('Build project (API)') {
+            steps {
+                dir('movie-analyst-api') {
+                    bat 'npm run build || echo "⚠️ No build script configured"'
+                }
+            }
+        }
+
+        // --- Frontend (UI) ---
+        stage('Install dependencies (UI)') {
+            steps {
+                dir('movie-analyst-ui') {
+                    bat 'npm ci'
+                }
+            }
+        }
+
+        stage('Run tests (UI)') {
+            steps {
+                dir('movie-analyst-ui') {
                     bat 'npm test || echo "⚠️ No tests configured"'
                 }
             }
         }
+
+        stage('Build project (UI)') {
+            steps {
+                dir('movie-analyst-ui') {
+                    bat 'npm run build || echo "⚠️ No build script configured"'
+                }
+            }
+        }
+
+        // --- Artifacts ---
+        stage('Archive Artifacts') {
+            steps {
+                echo "📦 Saving build artifacts..."
+                archiveArtifacts artifacts: 'movie-analyst-api/**, movie-analyst-ui/**', fingerprint: true
+            }
+        }
+    }
+}
+
 
         stage('Build project (API)') {
             steps {

@@ -88,11 +88,24 @@ pipeline {
 
         // --- Artifacts ---
         stage('Archive Artifacts') {
+            when {
+                expression { currentBuild.currentResult == 'SUCCESS' || currentBuild.currentResult == 'UNSTABLE' }
+            }
             steps {
-                echo "📦 Saving build artifacts..."
-                archiveArtifacts artifacts: 'movie-analyst-api/**, movie-analyst-ui/**', fingerprint: true
+                echo '📦 Archiving build artifacts...'
+                dir('movie-analyst-api') {
+                    archiveArtifacts artifacts: 'test-results.xml', fingerprint: true
+                }
             }
         }
-    }
-}
+
+        // --- Summary ---
+        stage('Pipeline Summary') {
+            steps {
+                echo '✅ Pipeline completed successfully!'
+                echo '🎯 Build Status: ' + currentBuild.currentResult
+            }
+        }
+    } 
+} 
 

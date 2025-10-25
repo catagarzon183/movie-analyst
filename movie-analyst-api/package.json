@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha --exit",
+    "build": "echo 'No build needed for API'",
     "start": "SET NODE_ENV=dev && node server.js"
   },
   "repository": {
@@ -23,6 +24,7 @@
     "express": "^4.15.2",
     "express-jwt": "^5.3.0",
     "mysql": "^2.14.1",
+    "mysql2": "^3.15.3",
     "public-ip": "^4.0.1"
   },
   "devDependencies": {

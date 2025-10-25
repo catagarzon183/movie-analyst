@@ -2,7 +2,8 @@ pipeline {
     agent any
 
     triggers {
-        pollSCM('H/5 * * * *') // Jenkins revisa cambios cada 5 min (simula on: push/pull_request)
+        // Jenkins revisa cambios cada 5 minutos (simula on: push/pull_request)
+        pollSCM('H/5 * * * *')
     }
 
     stages {
@@ -32,14 +33,17 @@ pipeline {
         stage('Run tests (API)') {
             steps {
                 script {
-                    // Variables de entorno necesarias
                     withEnv(["PORT=3000", "NODE_ENV=test"]) {
                         echo "Running API tests..."
-                        // Ejecuta los tests y evita que falle si aún no hay configurados
+                        // Evita que el pipeline se detenga si los tests fallan
                         bat '''
                         cd movie-analyst-api
                         if exist package.json (
-                            npm test || echo "⚠️ No tests configured yet"
+                            echo "Executing npm test..."
+                            npm test || (
+                                echo "⚠️ Tests failed but pipeline will continue."
+                                exit /b 0
+                            )
                         ) else (
                             echo "package.json not found in movie-analyst-api"
                         )

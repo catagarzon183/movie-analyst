@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "ui for the movie analyst website....im totally not ripping this off.......",
   "scripts": {
-   "test": "npx mocha --exit test/test.js"
+   "test": "npx mocha --exit test/test.js",
    "start": "node server.js",
    "build": "echo 'No build needed for UI'"
   },

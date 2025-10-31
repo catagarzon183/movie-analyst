@@ -5,7 +5,8 @@ let chai = require("chai");
 let chaiHttp = require("chai-http");
 let expect = require("chai").expect;
 let should = chai.should();
-et server = require('../../movie-analyst-api/server');
+const path = require('path');
+const server = require(path.join(__dirname, '../../movie-analyst-api/server'));
 
 
 chai.use(chaiHttp);
@@ -35,7 +36,7 @@ describe("UI", () => {
       });
   });
   describe("GET reviewers page", () => {
-    it("it should reply 200 over /authors", done => {
+    it("it should reply 200 over /reviewers", done => {
     chai.request(server) 
       .get('/authors')
       .end(function(err, res){

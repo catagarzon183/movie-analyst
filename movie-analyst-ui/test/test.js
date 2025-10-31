@@ -5,7 +5,7 @@ let chai = require("chai");
 let chaiHttp = require("chai-http");
 let expect = require("chai").expect;
 let should = chai.should();
-let server = require('../server');
+et server = require('../../movie-analyst-api/server');
 
 
 chai.use(chaiHttp);
